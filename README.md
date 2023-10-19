@@ -34,7 +34,7 @@ https://www.census.gov/programs-surveys/household-pulse-survey.html
 How do I use it?
 ----------------
 
-The scripts in this repo require the use of Python 3.9, as well as the [agate](https://agate.readthedocs.io/en/latest/) data analysis library.
+The scripts in this repo require the use of Python 3.8 or higher, as well as the [agate](https://agate.readthedocs.io/en/latest/) data analysis library.
 
 Use `pip install -r requirements3.txt` to install the necessary libraries into your environment (or virtual environment).
 
