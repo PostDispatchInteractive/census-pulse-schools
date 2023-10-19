@@ -75,12 +75,16 @@ def main(out_path, wanted_files=[]):
 	natl_tot = table.group_by('SCHYR').aggregate([('HHD_ALL', agate.Sum('HWEIGHT'))])
 	state_tot = table.group_by('SCHYR').group_by('EST_ST').aggregate([('HHD_ALL', agate.Sum('HWEIGHT'))])
 
-	# Otherwise, we need to limit the data to the universe of households where there are kids in some type of school.
+	# We need to limit the data to the universe of households where there are kids in some type of school.
 	# Originally I was doing this with a `ENRxxxCHK == 1` criteria. But Census Bureau's tables use `TENROLLxxx > 0`.
+
+	# IMPORTANT NOTE ABOUT FIRST FILTER: The Census Excel tables do *not* use this criteria, which means my HHD_ENRANY
+	# figure is not the same as their "total." My "ANY" figure represents the number of households who reported kids
+	# enrolled in any of the three school types. Their "total" figure is the number of households with any school-age kids,
+	# regardless of if they were reported as being enrolled.
 	sch_table = table.where(lambda row: row['TENROLLPUB'] > 0 or row['TENROLLPRV'] > 0 or row['TENROLLHMSCH'] > 0)
 
-	# The Census Bureau also filters with `TBIRTH_YEAR <= 2005` and `THHLD_NUMKID > 0`,
-	# though I have found these usually have very little effect.
+	# The Census Bureau filters with `TBIRTH_YEAR <= 2005` and `THHLD_NUMKID > 0`.
 	sch_table = sch_table.where(lambda row: row['TBIRTH_YEAR'] <= 2005 and row['THHLD_NUMKID'] > 0)
 
 	sch_table = sch_table.compute([
